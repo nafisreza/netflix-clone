@@ -1,6 +1,8 @@
 'use client';
+import axios from "axios";
 import { useCallback, useState } from "react";
 import Input from "@/components/Input";
+import { log } from "console";
 
 
 const auth = () => {
@@ -13,6 +15,18 @@ const auth = () => {
     const toggleVariant = useCallback(() => {
         setVariant((currentVariant) => currentVariant === 'login' ? 'register' : 'login')
     }, [])
+
+    const register = useCallback(async()=> {
+        try {
+            await axios.post('api/register', {
+                email,
+                name,
+                password 
+            }) 
+        } catch (err){
+            console.log(err) 
+        }
+    }, [email, name, password])
 
 
     return(
@@ -55,7 +69,7 @@ const auth = () => {
                                 value={password}
                             />
                         </div>
-                        <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+                        <button onClick={register} className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
                             {
                                 variant === 'login' ? 'Login' : 'Sign up'
                             }
