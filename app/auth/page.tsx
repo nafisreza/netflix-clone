@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useCallback, useState } from "react";
 import Input from "@/components/Input";
-import { log } from "console";
+import { signIn } from "next-auth/react";
 
 
 const auth = () => {
@@ -27,6 +27,20 @@ const auth = () => {
             console.log(err) 
         }
     }, [email, name, password])
+
+    const login = useCallback(async()=> {
+        try {
+            await signIn('credentials', {
+                email,
+                password,
+                redirect: false,
+                callbackUrl: '/'
+            })
+            router.push('/')
+        } catch (err){
+            console.log(err) 
+        }
+    }, [email, password, router])
 
 
     return(
@@ -69,7 +83,9 @@ const auth = () => {
                                 value={password}
                             />
                         </div>
-                        <button onClick={register} className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+                        <button onClick={
+                            variant === 'login' ? login : register
+                        } className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
                             {
                                 variant === 'login' ? 'Login' : 'Sign up'
                             }
